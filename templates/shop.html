@@ -1,0 +1,43 @@
+{% extends "base.html" %} 
+{% load static %} 
+{% block title %}Shop{% endblock %}
+
+{% block body %}
+<section class="">
+  {% if user.is_authenticated %}
+    <div class="text-center">
+      <h4 class="text-gray-600 text-lg">Shop</h4>
+      <h1 class="text-2xl font-bold">Welcome back, <span class="text-primary font-light">{{ user.first_name }}</span>!</h1>
+      <p class="text-gray-500 mt-2">Explore our latest offerings curated just for you.</p>
+    </div>
+  {% else %}
+    <div class="text-center">
+      <h4 class="text-gray-600 text-lg">Welcome to Our Shop</h4>
+      <h1 class="text-2xl font-bold">Discover Top Products and Services</h1>
+      <p class="text-gray-500 mt-2">Log in to see personalized recommendations or browse as a guest.</p>
+      <a href="{% url 'login' %}" class="mt-4 inline-block bg-primary text-white px-4 py-2 rounded hover:bg-accent">
+        Log In
+      </a>
+    </div>
+  {% endif %}
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+    <!-- Placeholder for shop items -->
+    {% for item in shop_items %}
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <img src="{{ item.image_url }}" alt="{{ item.name }}" class="rounded w-full mb-4">
+        <h3 class="text-xl font-bold">{{ item.name }}</h3>
+        <p class="text-gray-500">{{ item.description|truncatewords:15 }}</p>
+        <p class="text-primary font-bold mt-2">KSH {{ item.price }}</p>
+        <a href="#" class="block mt-4 bg-accent text-white px-4 py-2 rounded text-center hover:bg-primary">
+          View Details
+        </a>
+      </div>
+    {% empty %}
+      <div class="col-span-3 text-center text-gray-500">
+        <p>No items are currently available in the shop. Check back later!</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
