@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" class="h-screen w-screen scrollbar-hidden overflow-hidden">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FundiCentre | {% block title %} {% endblock %}</title>
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/output.css' %}" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+  </head>
+  <body
+    class="bg-background h-screen w-screen overflow-x-hidden scrollbar-hidden overflow-y-scroll relative font-sans"
+  >
+    <header
+      class="bg-background shadow-md h-[10vh] w-screen sticky top-0 flex justify-between gap-2 px-6 z-10"
+    >
+      <a href="{% url 'home' %}" class="text-2xl text-accent my-auto"
+        >FundiCentre</a
+      >
+
+      <nav
+        class="w-screen h-[90vh] absolute md:static top-full left-0 z-10 md:w-fit md:h-fit menu-hidden flex flex-col md:flex-row md:items-center md:my-auto gap-0 md:gap-6 px-6 py-8 md:py-0 bg-background transition-all duration-300"
+      >
+        <a
+          href="{% url 'home' %}"
+          class="flex items-center gap-4 py-6 px-4 md:py-0 w-full md:w-fit border-y border-black border-opacity-25 md:border-0"
+        >
+          <div class="md:hidden"><span class="material-symbols-outlined">home</span></div>
+          <p>Home</p>
+        </a>
+        <a
+          href="{% url 'shop' %}"
+          class="flex items-center gap-4 py-6 px-4 md:py-0 w-full md:w-fit border-y border-black border-opacity-25 md:border-0"
+        >
+          <div class="md:hidden"><span class="material-symbols-outlined">shopping_bag</span></div>
+          <p>Shop</p>
+        </a>
+        <a
+          href="{% url 'cart' %}"
+          class="flex items-center gap-4 py-6 px-4 md:py-0 w-full md:w-fit border-y border-black border-opacity-25 md:border-0 relative"
+        >
+          <div class="md:hidden"><span class="material-symbols-outlined">shopping_cart</span></div>
+          <p>Cart</p>
+
+          <span class="absolute top-1 md:-top-1 left-1 md:-right-1 bg-accent text-white w-4 aspect-square rounded-full text-xs flex items-center justify-center">{{user.cart.cartitem_set.count}}</span>
+        </a>
+        <a
+          href="{% url 'profile' %}"
+          class="flex items-center gap-4 py-6 px-4 md:py-0 w-full md:w-fit border-y border-black border-opacity-25 md:border-0"
+        >
+          <div class="md:hidden"><span class="material-symbols-outlined">person</span></div>
+          <p>Profile</p>
+        </a>
+      </nav>
+
+      <a
+          href="{% url 'cart' %}"
+          class="md:hidden ml-auto my-auto relative"
+        >
+          <div class="md:hidden">
+            <span class="material-symbols-outlined">shopping_cart</span>
+          </div>
+
+          <span class="absolute -top-2 -right-2 bg-accent text-white w-4 aspect-square rounded-full text-xs flex items-center justify-center">{{user.cart.cartitem_set.count}}</span>
+        </a>
+
+      <button class="md:hidden bg-transparent focus:bg-transparent">
+        <span class="material-symbols-outlined">
+          menu
+          </span>
+      </button>
+    </header>
+
+    <main class="w-full h-fit flex-shrink-0 px-0 flex relative">
+      {% block body %}
+      {% endblock %}
+      {% if messages %}
+        <ul class="absolute top-4 right-4 z-[5]">
+          {% for message in messages %}
+            <li class="alert max-w-64 px-6 py-4 bg-white shadow-xl rounded-2xl">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </main>
+
+    <footer class="bg-gray-300 py-6">
+      <div
+        class="container mx-auto flex flex-col md:flex-row items-center justify-between px-4"
+      >
+        <a href="{% url 'home' %}" class="text-2xl mb-4 md:mb-0">FundiCentre</a>
+        <nav class="space-x-4">
+          <a href="{% url 'home' %}" class="">Home</a>
+          <a href="{% url 'shop' %}" class="">Shop</a>
+          <a href="{% url 'cart' %}" class="">Cart</a>
+          <a href="{% url 'profile' %}" class="">Profile</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      const navButton = document.querySelector('header button')
+      const nav = document.querySelector('header nav')
+      const navLinks = document.querySelectorAll('header nav a')
+
+      navButton.addEventListener('click', () => {
+        nav.classList.toggle('menu-hidden')
+        console.log("Toggle Menu")
+      })
+
+      navLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          nav.classList.toggle('menu-hidden')
+        })
+      })
+    </script>
+    {% block scripts %}
+    {% endblock scripts %}
+  </body>
+</html>

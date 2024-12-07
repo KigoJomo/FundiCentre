@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+{% block body %}
+<section class="bg-background py-8 px-2 md:px-0 md:overflow-hidden">
+  <div class="container md:h-full mx-auto flex flex-col items-center md:flex-row md:items-start gap-8">
+
+    <div class="bg-white rounded-lg shadow-md px-4 py-8 w-full md:w-1/3">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-primary">Profile</h3>
+      </div>
+      <div class="flex items-center gap-4 mb-6">
+        <div class="bg-accent rounded-full w-16 h-16 flex items-center justify-center text-3xl font-bold text-white">
+          {{ user.first_name|first }}{{ user.last_name|first }}
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold">{{ user.first_name }} {{ user.last_name }}</h1>
+          <p class="text-gray-500">{{ user.user_role|title }}</p>
+        </div>
+      </div>
+      <div class="space-y-4">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined">
+            mail
+          </span>
+          <p>{{ user.email }}</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined">
+            location_on
+          </span>
+          <p>Nairobi, KE</p>
+        </div>
+      </div>
+
+      <div class="mt-6 w-full border-t border-black border-opacity-15 pt-6">
+        <form method="POST" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="bg-transparent focus:bg-transparent hover:bg-transparent text-accent" style="padding: 0;">
+            <span class="material-symbols-outlined text-accent">
+              logout
+              </span>
+            Logout
+          </button>
+        </form>
+      </div>
+    </div>
+    
+
+    <div class="bg-white rounded-lg shadow-md px-4 py-8 w-full md:w-2/3 md:h-full md:overflow-y-scroll scrollbar-hidden">
+      {% if user.user_role == 'artisan' %}
+        <h3 class="">My Listings</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          {% for item in user_listings %}
+            <a 
+              href="{% url 'product_detail' slug=item.slug %}"
+              class="w-full h-fit bg-gray-100 border border-transparent hover:border-accent hover:shadow rounded-2xl flex md:flex-col gap-4 p-2">
+              <div class="w-2/5 md:w-full aspect-[1/1] h-auto rounded-xl bg-cover bg-center" style="background-image: url('{{ item.images.first.image.url }}')"></div>
+      
+              <div class="w-3/5 md:w-full h-full flex flex-col gap-2">
+                <h4 class="text-xl text-primary font-bold">{{ item.name }}</h4>
+      
+                <p class="my-2 text-xs">{{ item.description|truncatewords:5 }}</p>
+      
+                <p class="text-base font-bold">Ksh {{ item.price }}</p>
+              </div>
+            </a>
+            {% empty %}
+            <div class="col-span-3 text-center text-gray-500">
+              <p>You have not uploaded any products yet.</p>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="mt-8 border-t border-black border-opacity-20 pt-8 flex flex-col gap-6">
+          <h4 class="text-lg font-semibold">Upload New Product</h4>
+
+          <form id="upload-product-form" enctype="multipart/form-data" class="flex flex-col gap-6" action="{% url 'upload_product' %}" method="POST">
+            {% csrf_token %}
+            <div class="input-wrapper">
+              <label for="name">Product Name</label>
+              <input type="text" name="name" id="name" class="px-4 py-2" required>
+            </div>
+            <div class="input-wrapper">
+              <label for="description">Description</label>
+              <textarea name="description" id="description" rows="3" class="px-4 py-2" required></textarea>
+            </div>
+            <div class="input-wrapper">
+              <label for="price">Price (Ksh)</label>
+              <input type="number" name="price" id="price" class="px-4 py-2" required>
+            </div>
+            <div class="flex gap-4">
+              <div id="image-preview" class="flex gap-4"></div>
+
+              <label for="images" class="w-32 h-32 bg-gray-200 rounded-md flex items-center justify-center gap-2 text-sm cursor-pointer border border-transparent hover:border-accent transition-all duration-300">
+                <span class="material-symbols-outlined">
+                  add_circle
+                  </span>
+                Add Image
+              </label>
+
+              <input type="file" name="images" id="images" class="hidden" multiple accept="image/*" onchange="" required>
+            </div>
+            <button type="submit" class="w-fit bg-accent text-white px-4 py-2 rounded hover:bg-primary">
+              Upload
+            </button>
+          </form>  
+        </div>
+        {% else %}
+        <h3>My orders</h3>
+
+        {% if orders %}
+          {% for order in orders %}
+            <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
+              <div class="flex justify-between items-center">
+                <h2 class="text-xl font-semibold">Order #{{ order.id }}</h2>
+                <span class="text-gray-600 text-sm">Placed on {{ order.created_at|date:"M d, Y H:i" }}</span>
+              </div>
+
+              <p class="text-sm text-gray-600 mt-2">Status: 
+                <span class="font-semibold {% if order.status == 'DELIVERED' %}text-green-600{% elif order.status == 'CANCELLED' %}text-red-600{% else %}text-gray-800{% endif %}">
+                  {{ order.get_status_display }}
+                </span>
+              </p>
+
+              <p class="text-lg font-bold mt-4">Total: Ksh {{ order.total_amount }}</p>
+
+              <button onclick="toggleOrderDetails({{ order.id }})" class="mt-4 bg-aacent text-white px-4 py-2 rounded-md">
+                View Details
+              </button>
+
+              <div id="order-details-{{ order.id }}" class="mt-4 hidden">
+                <h3 class="font-bold mb-2">Items in this order:</h3>
+                <ul>
+                  {% for item in order.items.all %}
+                    <li class="flex justify-between mb-2">
+                      <span>{{ item.quantity }} x {{ item.product.name }}</span>
+                      <span>Ksh {{ item.get_total_price }}</span>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>You have no past orders.</p>
+        {% endif %}
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const imageInput = document.getElementById('images');
+  const previewContainer = document.getElementById('image-preview');
+  const dt = new DataTransfer(); // Persistent storage for selected files
+
+  imageInput.addEventListener('change', function () {
+    Array.from(this.files).forEach((file) => {
+      dt.items.add(file); // Add new files to the DataTransfer object
+
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        const imageElement = document.createElement('div');
+        imageElement.className = "relative w-32 h-32";
+
+        imageElement.innerHTML = `
+          <img src="${e.target.result}" alt="Preview" class="w-full h-full object-cover rounded-md" />
+          <button type="button" data-name="${file.name}" class="absolute top-2 right-2 bg-white text-red-500 rounded-full p-1 hover:bg-red-500 hover:text-white transition-all">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        `;
+
+        previewContainer.appendChild(imageElement);
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    this.files = dt.files; // Update the input's file list to persist selections
+  });
+
+  // Handle removing images
+  previewContainer.addEventListener('click', function (event) {
+    if (event.target.closest('button')) {
+      const fileName = event.target.closest('button').dataset.name;
+
+      // Remove the file from the DataTransfer object
+      for (let i = 0; i < dt.items.length; i++) {
+        if (dt.items[i].getAsFile().name === fileName) {
+          dt.items.remove(i);
+          break;
+        }
+      }
+
+      imageInput.files = dt.files; // Update the input's file list
+
+      // Remove the preview element
+      event.target.closest('div').remove();
+    }
+  });
+
+  function toggleOrderDetails(orderId) {
+    const details = document.getElementById(`order-details-${orderId}`);
+    details.classList.toggle('hidden');
+  }
+</script>
+{% endblock scripts %}
