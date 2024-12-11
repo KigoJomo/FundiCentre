@@ -6,6 +6,7 @@
   --primary: #131212;
   --background: #f3efdd;
   --accent: #a54e0c;
+  --accent-dark: #773705;
   --font-size: 1rem;
   --font-ratio: 1.4;
 }
@@ -49,6 +50,11 @@ h3 {
   font-weight: 600;
 }
 
+h4 {
+  font-size: calc(var(--font-size));
+  font-weight: 600;
+}
+
 p,
 li,
 label {
@@ -65,14 +71,41 @@ button,
   padding: 0.5rem 1rem;
   background: var(--accent);
   color: var(--background);
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   cursor: pointer;
   text-transform: capitalize;
   transition: all 0.3s ease;
 }
 button:hover,
 .button:hover {
-  background: var(--primary);
+  background: var(--accent-dark);
+  color: var(--background);
+}
+button:hover span,
+.button:hover span {
+  color: var(--background);
+}
+
+.button-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--background);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-transform: capitalize;
+  transition: all 0.3s ease;
+}
+.button-secondary:hover {
+  background: var(--accent);
+  color: var(--background);
+}
+.button-secondary:hover span {
+  color: var(--background);
 }
 
 .alata {
@@ -101,12 +134,16 @@ img {
 html {
   background: var(--background);
 }
+html body nav a:hover p {
+  color: var(--accent);
+}
 html body section {
   width: 100vw;
   height: 90vh;
   overflow-x: hidden;
   flex-shrink: 0;
   padding: 1rem 8rem;
+  animation: fadeIn 1s ease-out;
 }
 @media (max-width: 768px) {
   html body section {
@@ -138,13 +175,17 @@ html body section {
   flex-direction: column;
   gap: 0.25rem;
 }
-.input-wrapper input, .input-wrapper select, .input-wrapper textarea {
+.input-wrapper input,
+.input-wrapper select,
+.input-wrapper textarea {
   border-radius: 0.25rem;
   outline: none;
   border: 1px solid rgba(0, 0, 0, 0.2);
   background: white;
 }
-.input-wrapper input:focus, .input-wrapper select:focus, .input-wrapper textarea:focus {
+.input-wrapper input:focus,
+.input-wrapper select:focus,
+.input-wrapper textarea:focus {
   outline: none;
   border-color: var(--accent);
 }
@@ -156,4 +197,62 @@ html body section {
 
 .swiper-pagination-bullet-active {
   background: var(--accent) !important;
+}
+
+.active-link {
+  position: relative;
+  font-size: calc(var(--font-ratio) * 1.2);
+  transition: all 0.3s ease-out;
+}
+.active-link p {
+  color: var(--accent);
+}
+.active-link::before {
+  position: absolute;
+  content: "";
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 105%;
+  height: 2px;
+  background: var(--accent);
+}
+
+.tinted {
+  position: relative;
+}
+.tinted * {
+  position: relative;
+  z-index: 1;
+}
+.tinted::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: black;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.tinted-bottom {
+  position: relative;
+}
+.tinted-bottom * {
+  position: relative;
+  z-index: 1;
+}
+.tinted-bottom::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+  z-index: 0;
 }

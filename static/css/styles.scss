@@ -8,6 +8,7 @@
   --primary: #131212;
   --background: #f3efdd;
   --accent: #a54e0c;
+  --accent-dark: #773705;
 
   --font-size: 1rem;
   --font-ratio: 1.4;
@@ -55,6 +56,11 @@ h3 {
   font-weight: 600;
 }
 
+h4 {
+  font-size: calc(var(--font-size));
+  font-weight: 600;
+}
+
 p,
 li,
 label {
@@ -63,22 +69,50 @@ label {
 }
 
 button,
-.button{
+.button {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
 
   background: var(--accent);
   color: var(--background);
-  border-radius: .25rem;
+  border-radius: 0.5rem;
   cursor: pointer;
   text-transform: capitalize;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 
-  &:hover{
-    background: var(--primary);
+  &:hover {
+    background: var(--accent-dark);
+    color: var(--background);
+    span {
+      color: var(--background);
+    }
+  }
+}
+
+.button-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+
+  background: var(--background);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-transform: capitalize;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: var(--accent);
+    color: var(--background);
+    span {
+      color: var(--background);
+    }
   }
 }
 
@@ -108,12 +142,22 @@ img {
 html {
   background: var(--background);
   body {
+    nav {
+      a {
+        &:hover {
+          p {
+            color: var(--accent);
+          }
+        }
+      }
+    }
     section {
       width: 100vw;
       height: 90vh;
       overflow-x: hidden;
       flex-shrink: 0;
       padding: 1rem 8rem;
+      animation: fadeIn 1s ease-out;
     }
 
     @media (max-width: 768px) {
@@ -143,19 +187,21 @@ html {
   left: 100%;
 }
 
-.input-wrapper{
+.input-wrapper {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: .25rem;
+  gap: 0.25rem;
 
-  input, select, textarea{
-    border-radius: .25rem;
+  input,
+  select,
+  textarea {
+    border-radius: 0.25rem;
     outline: none;
     border: 1px solid rgba(0, 0, 0, 0.2);
     background: white;
 
-    &:focus{
+    &:focus {
       outline: none;
       border-color: var(--accent);
     }
@@ -169,4 +215,67 @@ html {
 
 .swiper-pagination-bullet-active {
   background: var(--accent) !important;
+}
+
+.active-link {
+  position: relative;
+  font-size: calc(var(--font-ratio) * 1.2);
+  transition: all 0.3s ease-out;
+
+  p {
+    color: var(--accent);
+  }
+
+  &::before {
+    position: absolute;
+    content: '';
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+
+    width: 105%;
+    height: 2px;
+    background: var(--accent);
+  }
+}
+
+.tinted {
+  position: relative;
+  * {
+    position: relative;
+    z-index: 1;
+  }
+
+  &::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: black;
+    opacity: 0.5;
+    z-index: 0;
+  }
+}
+
+.tinted-bottom {
+  position: relative;
+  * {
+    position: relative;
+    z-index: 1;
+  }
+
+  &::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+    z-index: 0;
+  }
 }

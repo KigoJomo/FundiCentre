@@ -38,14 +38,18 @@
       </div>
       
 
-      <div class="input-wrapper">
+      <div class="input-wrapper relative">
         <label for="id_password1" class="text-sm">Password:</label>
         <input type="password" name="password1" autocomplete="new-password" aria-describedby="id_password1_helptext" id="id_password1" class="px-4 py-2">
+
+        {% include "ui-components/passwordToggle.html" %}
       </div>
 
-      <div class="input-wrapper">
+      <div class="input-wrapper relative">
         <label for="id_password2" class="text-sm">Re-enter Your Password:</label>
         <input type="password" name="password2" autocomplete="new-password" aria-describedby="id_password2_helptext" id="id_password2" class="px-4 py-2">
+
+        {% include "ui-components/passwordToggle.html" %}
       </div>
 
       <button type="submit" class="w-full">Register</button>

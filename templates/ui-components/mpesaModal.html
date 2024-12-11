@@ -1,0 +1,31 @@
+{% load static %}
+<div id="mpesaModal" class="fixed z-10 inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+    <h2 class="text-xl font-bold mb-4">Lipa na Mpesa</h2>
+
+    <form method="POST" action="{% if product_id %}{% url 'stk' product_id %}{% else %}{% url 'stk_no_product' %}{% endif %}">
+      {% csrf_token %}
+      <div class="mb-4 input-wrapper">
+        <label for="phone" class="">M-Pesa Phone Number</label>
+        <input type="number" name="phone" id="phone" class="px-4 py-2" required placeholder="e.g., 254712345678">
+      </div>
+
+      <div class="mb-4 input-wrapper">
+        <label for="amount" class="">Ksh <span class="font-semibold">{{ total }}</span></label>
+        <input type="text" name="amount" id="amount" class="px-4 py-2 hidden" value="{{ total }}">
+      </div>
+
+      <div class="flex justify-end gap-4">
+        <button type="button" onclick="document.getElementById('mpesaModal').classList.add('hidden')" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition-colors">
+          Cancel
+        </button>
+
+        <button type="submit" class="flex items-center gap-2 button-secondary">
+          <p class="text-accent pb-2">Pay</p>
+          <div class="h-6 w-[1px] bg-black/40"></div>
+          <img src="{% static 'images/mpesa-logo.png' %}" alt="" class="h-8 object-contain" />
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

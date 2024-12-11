@@ -17,9 +17,11 @@
         <input type="email" name="username" maxlength="254" required="" id="id_username" class="px-4 py-2">
       </div>
     
-      <div class="input-wrapper">
+      <div class="input-wrapper relative">
         <label for="id_password" class="text-sm">Password:</label>
         <input type="password" name="password" autocomplete="current-password" required="" id="id_password" class="px-4 py-2">
+
+        {% include "ui-components/passwordToggle.html" %}
       </div>
       <button type="submit" class="w-full">Login</button>
     </form>

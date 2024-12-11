@@ -1,5 +1,5 @@
-{% extends "base.html" %} 
-{% load static %} 
+{% extends "base.html" %}
+{% load static %}
 {% load cart_filters %}
 {% block title %}Your Cart{% endblock %}
 {% block body %}
@@ -8,108 +8,94 @@
     <button onclick="history.back()" class="bg-gray-100 p-2 rounded-full">
       <span class="material-symbols-outlined">
         chevron_left
-        </span>
+      </span>
     </button>
     <h1 class="text-2xl font-bold text-gray-800">Your Cart</h1>
 
     {% if cart.items.all %}
-      <div class="text-sm text-gray-600 ml-auto">
-        {{ cart.cartitem_set.count }} item{% if cart.cartitem_set.count != 1 %}s{% endif %}
-      </div>
+    <div class="text-sm text-gray-600 ml-auto">
+      {{ cart.cartitem_set.count }} item{% if cart.cartitem_set.count != 1 %}s{% endif %}
+    </div>
     {% endif %}
   </div>
 
   {% if cart.items.all %}
-    <div class="w-full flex flex-col gap-8">
-      {% for item in cart.cartitem_set.all %}
-        <div class="w-full flex items-center gap-4 bg-white p-2 rounded-2xl">
+  <div class="w-full flex flex-col gap-8">
+    {% for item in cart.cartitem_set.all %}
+    <div class="w-full flex items-center gap-4 bg-white p-2 rounded-2xl">
 
-          <div class="w-16 aspect-[1/1] flex-shrink-0 rounded-xl border border-accent bg-cover bg-center" style="background-image: url('{{ item.product.images.first.image.url }}')"></div>
+      <div class="w-16 aspect-[1/1] flex-shrink-0 rounded-xl border border-accent bg-cover bg-center"
+        style="background-image: url('{{ item.product.images.first.image.url }}')"></div>
 
-          <div>
-            <h3 class="text-sm font-semibold text-primary">{{ item.product.name }}</h3>
+      <div>
+        <h3 class="text-sm font-semibold text-primary">{{ item.product.name }}</h3>
 
-            <p class="text-xs opacity-60">Ksh {{ item.product.price }}</p>
+        <p class="text-xs opacity-60">Ksh {{ item.product.price }}</p>
 
-            <div class="text-sm font-semibold mt-2">
-              Ksh {{ item.product.price|multiply:item.quantity }}
-            </div>
-          </div>
-
-          <div class="flex flex-col items-center gap-6 ml-auto">
-            <div class="flex items-center border border-gray-300 rounded-md">
-              <form method="POST" action="{% url 'update_cart_quantity' item.id %}" class="">
-                {% csrf_token %}
-                <button type="submit" name="action" value="decrease" class="w-6 p-0 aspect-square flex items-center justify-center bg-gray-200 text-primary">-</button>
-              </form>
-                
-              <span class="px-3 py-1 text-sm">{{ item.quantity }}</span>
-                
-              <form method="POST" action="{% url 'update_cart_quantity' item.id %}" class="">
-                {% csrf_token %}
-                <button type="submit" name="action" value="increase" class="w-6 p-0 aspect-square flex items-center justify-center bg-gray-200 text-primary">+</button>
-              </form>
-            </div>
-
-            <form method="POST" action="{% url 'remove_from_cart' item.id %}" class="ml-auto">
-              {% csrf_token %}
-              <button type="submit" class="p-0 bg-red-100">
-                <span class="material-symbols-outlined text-red-600" style="font-size: 1.25rem;">
-                  delete
-                  </span>
-              </button>
-            </form>                  
-          </div>
-
+        <div class="text-sm font-semibold mt-2">
+          Ksh {{ item.product.price|multiply:item.quantity }}
         </div>
-      {% endfor %}
-    </div>
+      </div>
 
-    <div id="mpesaModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-      <div class="bg-white p-6 rounded-lg shadow-lg w-80">
-        <h2 class="text-xl font-bold mb-4">Lipa na Mpesa</h2>
-        <form method="POST" action="{% url 'stk' %}">
+      <div class="flex flex-col items-center gap-6 ml-auto">
+        <div class="flex items-center border border-gray-300 rounded-md">
+          <form method="POST" action="{% url 'update_cart_quantity' item.id %}" class="">
+            {% csrf_token %}
+            <button type="submit" name="action" value="decrease"
+              class="w-6 p-0 aspect-square flex items-center justify-center bg-gray-200 text-primary">-</button>
+          </form>
+
+          <span class="px-3 py-1 text-sm">{{ item.quantity }}</span>
+
+          <form method="POST" action="{% url 'update_cart_quantity' item.id %}" class="">
+            {% csrf_token %}
+            <button type="submit" name="action" value="increase"
+              class="w-6 p-0 aspect-square flex items-center justify-center bg-gray-200 text-primary">+</button>
+          </form>
+        </div>
+
+        <form method="POST" action="{% url 'remove_from_cart' item.id %}" class="ml-auto">
           {% csrf_token %}
-          <div class="mb-4 input-wrapper">
-            <label for="phone" class="">M-Pesa Phone Number</label>
-            <input type="number" name="phone" id="phone" class="px-4 py-2" required>
-          </div>
-          <div class="mb-4 input-wrapper">
-            <label for="amount" class="">Amount (Ksh)</label>
-            <input type="text" name="amount" id="amount" class="px-4 py-2" value="{{ cart.get_total }}" disabled>
-          </div>
-          <div class="flex justify-end gap-4">
-            <button type="button" onclick="document.getElementById('mpesaModal').classList.add('hidden')" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition-colors">
-              Cancel
-            </button>
-            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
-              Pay
-            </button>
-          </div>
+          <button type="submit" class="p-0 bg-red-100">
+            <span class="material-symbols-outlined text-red-600" style="font-size: 1.25rem;">
+              delete
+            </span>
+          </button>
         </form>
       </div>
+
+    </div>
+    {% endfor %}
+  </div>
+
+  {% include "ui-components/mpesaModal.html" with total=cart.get_total %}
+
+  <div
+    class="w-full mt-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-4 rounded-2xl">
+    <div class="flex flex-col gap-2">
+      <span class="text-sm opacity-60">Total</span>
+      <span class="text-2xl">Ksh {{ cart.get_total }}</span>
     </div>
 
-    <div class="w-full mt-auto flex items-center justify-between gap-4 bg-white p-4 rounded-2xl">
-      <div class="flex flex-col gap-2">
-        <span class="text-sm opacity-60">Total</span>
-        <span class="text-2xl">Ksh {{ cart.get_total }}</span>
-      </div>
-
-      <button onclick="document.getElementById('mpesaModal').classList.remove('hidden')" class="bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-600 transition-colors">
-        Pay via Mpesa
-      </button>
-    </div>
+    <button onclick="document.getElementById('mpesaModal').classList.remove('hidden')"
+      class="flex items-center gap-2 button-secondary">
+      <p class="text-accent pb-2">Checkout</p>
+      <div class="h-6 w-[1px] bg-black/40"></div>
+      <img src="{% static 'images/mpesa-logo.png' %}" alt="" class="h-8 object-contain" />
+    </button>
+  </div>
   {% else %}
-    <div class="p-6 text-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-      <p class="text-xl text-gray-600 mb-4">Your cart is empty</p>
-      <a href="{% url 'product_list' %}" class="bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-600 transition-colors">
-        Continue Shopping
-      </a>
+  <div class="flex flex-col items-center gap-6">
+    <div class="px-12 aspect-square border-8 border-black/20 flex items-center justify-center rounded-full">
+      <span class="material-symbols-outlined" style="font-size: 8rem;">
+        shopping_cart
+      </span>
     </div>
+    <p class="text-xl text-gray-600 mb-4">Your cart is empty</p>
+    <a href="{% url 'shop' %}" class="button w-fit">
+      Continue Shopping
+    </a>
+  </div>
   {% endif %}
 </section>
 {% endblock %}
